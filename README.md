@@ -1,9 +1,9 @@
 # Safety Zone
 
 ![GitHub followers](https://img.shields.io/github/followers/mjsouthcott?label=Follow&style=social)
-![GitHub repo size](https://img.shields.io/github/repo-size/mjsouthcott/dfs-app)
-![GitHub top language](https://img.shields.io/github/languages/top/mjsouthcott/dfs-app)
-![GitHub last commit](https://img.shields.io/github/last-commit/mjsouthcott/dfs-app)
+![GitHub repo size](https://img.shields.io/github/repo-size/mjsouthcott/safety-zone)
+![GitHub top language](https://img.shields.io/github/languages/top/mjsouthcott/safety-zone)
+![GitHub last commit](https://img.shields.io/github/last-commit/mjsouthcott/safety-zone)
 
 ## Table of Contents
 
