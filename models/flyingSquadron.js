@@ -1,0 +1,28 @@
+const mongoose = require("mongoose");
+const titles = require("../utils/flying_squadron/titles");
+
+const Schema = mongoose.Schema;
+
+const flyingSquadronSchema = new Schema(
+	{
+		title: {
+			type: String,
+			enum: titles,
+			required: true,
+			unique: true,
+		},
+		aircraft: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Aircraft",
+			},
+		],
+	},
+	{
+		timestamps: true,
+	}
+);
+
+const FlyingSquadron = mongoose.model("FlyingSquadron", flyingSquadronSchema);
+
+module.exports = FlyingSquadron;

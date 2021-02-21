@@ -1,0 +1,20 @@
+{
+	"name": "safety-zone-mern",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"seed": "node --no-warnings scripts/seedAircraftDB && node --no-warnings scripts/seedFlyingSquadronsDB && node --no-warnings scripts/seedWingsDB && node --no-warnings scripts/seedPersonnelDB && node --no-warnings scripts/seedFlightSafetyReportsDB && node --no-warnings scripts/seedUsersDB"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1",
+		"mongoose": "^5.11.17"
+	},
+	"devDependencies": {
+		"concurrently": "^6.0.0"
+	}
+}
