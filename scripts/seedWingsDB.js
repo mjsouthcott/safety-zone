@@ -1,8 +1,16 @@
 const mongoose = require("mongoose");
 const db = require("../models");
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config();
+}
+const mongoLogin = process.env.MONGO_USER || '';
+const mongoPass = process.env.MONGO_PASS || '';
+const mongoHost = process.env.MONGO_HOST || 'localhost';
+const mongoPort = process.env.MONGO_PORT || 27017;
 
 // connect to db
-mongoose.connect("mongodb://localhost:27017/test", {
+const mongoseAuth = mongoLogin && mongoPass ? `${mongoLogin}:${mongoPass}@` : '';
+mongoose.connect(`mongodb://${mongoseAuth}${mongoHost}:${mongoPort}/test`, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });
