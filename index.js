@@ -1,10 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const db = require("./models");
+const routes = require("./routes");
 
 // create app
 const app = express();
 const port = 3000;
+
+// define middleware
+app.use(express.json());
+app.use(routes);
 
 // connect to db
 mongoose.connect("mongodb://localhost:27017/test", {

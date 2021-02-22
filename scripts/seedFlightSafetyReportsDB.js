@@ -118,7 +118,7 @@ const flightSafetyReportSeed = [
 		navaidLocationIdent: 0,
 		navaidLocationDistanceTo: 0,
 		navaidLocationBearingTo: 0,
-		descriptionTitle: "Metail deposited in oil filters",
+		descriptionTitle: "Metal deposited in oil filters",
 		descriptionNarrative:
 			"During preventive maintenance inspection, metal deposits found in oil filters",
 		personnel: [],
@@ -156,21 +156,38 @@ db.Personnel.find()
 			})
 			.then((flightSafetyReportSeed) => {
 				db.FlightSafetyReport.insertMany(flightSafetyReportSeed).then(
-					() => {
-						db.FlightSafetyReport.find()
-							.populate("personnel")
-							.then((flightSafetyReports) => {
-								// flightSafetyReports.forEach((flightSafetyReport) => {
-								// 	console.log(flightSafetyReport.descriptionTitle);
-								// 	flightSafetyReport.personnel.forEach((personnel) => {
-								// 		console.log(personnel.role);
-								// 	});
-								// });
-								console.log(
-									`${flightSafetyReports.length} FlightSafetyReport records inserted!`
-								);
-								process.exit(0);
-							});
+					(flightSafetyReports) => {
+						console.log(
+							`${flightSafetyReports.length} FlightSafetyReport records inserted!`
+						);
+						db.Aircraft.updateOne(
+							{ registration: "GW-0000" },
+							{
+								$push: {
+									flightSafetyReports: [
+										flightSafetyReports[0]._id,
+										flightSafetyReports[1]._id,
+									],
+								},
+							}
+						).then(() => {
+							db.FlightSafetyReport.find().then(
+								(flightSafetyReports) => {
+									db.Aircraft.updateOne(
+										{ registration: "CX-0003" },
+										{
+											$push: {
+												flightSafetyReports: [
+													flightSafetyReports[2]._id,
+												],
+											},
+										}
+									).then(() => {
+										process.exit(0);
+									});
+								}
+							);
+						});
 					}
 				);
 			});

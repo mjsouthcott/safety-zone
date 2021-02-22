@@ -44,18 +44,8 @@ db.FlyingSquadron.find()
 		return wingSeed;
 	})
 	.then((wingSeed) => {
-		db.Wing.insertMany(wingSeed).then(() => {
-			db.Wing.find()
-				.populate("flyingSquadrons")
-				.then((wings) => {
-					// wings.forEach((wing) => {
-					// 	console.log(wing.title);
-					// 	wing.flyingSquadrons.forEach((flyingSquadron) => {
-					// 		console.log(flyingSquadron.title);
-					// 	});
-					// });
-					console.log(`${wings.length} Wing records inserted!`);
-					process.exit(0);
-				});
+		db.Wing.insertMany(wingSeed).then((wings) => {
+			console.log(`${wings.length} Wing records inserted!`);
+			process.exit(0);
 		});
 	});
