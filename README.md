@@ -28,7 +28,7 @@ This is a React application created for the Directorate of Flight Safety that al
 -   MongoDB (DB)
 -   Mongoose (ORM)
 -   Express (Server)
--   Node (Runtime)
+-   Node (Back-end runtime)
 
 ## User Stories
 
