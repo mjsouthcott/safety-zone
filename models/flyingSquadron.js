@@ -17,6 +17,10 @@ const flyingSquadronSchema = new Schema(
 				ref: "Aircraft",
 			},
 		],
+		wing: {
+			type: Schema.Types.ObjectId,
+			ref: "Wing",
+		},
 	},
 	{
 		timestamps: true,

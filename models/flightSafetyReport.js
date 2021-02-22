@@ -197,6 +197,14 @@ const flightSafetyReportSchema = new Schema(
 			type: String,
 			enum: statuses,
 		},
+		user: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+		},
+		aircraft: {
+			type: Schema.Types.ObjectId,
+			ref: "Aircraft",
+		},
 	},
 	{
 		timestamps: true,

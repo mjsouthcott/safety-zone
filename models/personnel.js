@@ -28,6 +28,10 @@ const personnelSchema = new Schema(
 			maxlength: 100,
 			trim: true,
 		},
+		flightSafetyReport: {
+			type: Schema.Types.ObjectId,
+			ref: "FlightSafetyReport",
+		},
 	},
 	{
 		timestamps: true,

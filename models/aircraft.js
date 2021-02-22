@@ -30,6 +30,10 @@ const aircraftSchema = new Schema(
 				ref: "FlightSafetyReport",
 			},
 		],
+		flyingSquadron: {
+			type: Schema.Types.ObjectId,
+			ref: "FlyingSquadron",
+		},
 	},
 	{
 		timestamps: true,

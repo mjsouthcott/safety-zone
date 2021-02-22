@@ -89,36 +89,46 @@ const flyingSquadronSeed = [
 		aircraft: [],
 	},
 ];
-db.Aircraft.find()
-	.then((aircraft) => {
-		let idx = 0;
-		for (let i = 0; i < flyingSquadronSeed.length; i++) {
-			for (
-				let j = 0;
-				j < aircraft.length / flyingSquadronSeed.length;
-				j++
-			) {
-				flyingSquadronSeed[i].aircraft.push(aircraft[idx]._id);
-				idx++;
-			}
+db.Aircraft.find().then((aircraft) => {
+	let idx = 0;
+	for (let i = 0; i < flyingSquadronSeed.length; i++) {
+		for (let j = 0; j < aircraft.length / flyingSquadronSeed.length; j++) {
+			flyingSquadronSeed[i].aircraft.push(aircraft[idx]._id);
+			idx++;
 		}
-		return flyingSquadronSeed;
-	})
-	.then((flyingSquadronSeed) => {
-		db.FlyingSquadron.insertMany(flyingSquadronSeed).then(() => {
-			db.FlyingSquadron.find()
-				.populate("aircraft")
-				.then((flyingSquadrons) => {
-					// flyingSquadrons.forEach((flyingSquadron) => {
-					// 	console.log(flyingSquadron.title);
-					// 	flyingSquadron.aircraft.forEach((aircraft) => {
-					// 		console.log(aircraft.type, aircraft.registration);
-					// 	});
-					// });
-					console.log(
-						`${flyingSquadrons.length} FlyingSquadron records inserted!`
-					);
+	}
+	db.FlyingSquadron.insertMany(flyingSquadronSeed).then((flyingSquadrons) => {
+		console.log(
+			`${flyingSquadrons.length} FlyingSquadron records inserted!`
+		);
+		db.Aircraft.find().then((aircraft) => {
+			let idx = 0;
+			for (let i = 0; i < flyingSquadrons.length; i++) {
+				for (
+					let j = 0;
+					j < aircraft.length / flyingSquadrons.length;
+					j++
+				) {
+					aircraft[idx].flyingSquadron = flyingSquadrons[i]._id;
+					idx++;
+				}
+			}
+			db.Aircraft.collection
+				.bulkWrite(
+					aircraft.map((aircraft) => ({
+						updateOne: {
+							filter: {
+								_id: aircraft._id,
+							},
+							update: {
+								$set: aircraft,
+							},
+						},
+					}))
+				)
+				.then(() => {
 					process.exit(0);
 				});
 		});
 	});
+});
