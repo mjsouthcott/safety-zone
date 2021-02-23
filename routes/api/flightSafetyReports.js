@@ -3,8 +3,6 @@ const flightSafetyReportsController = require("../../controllers/flightSafetyRep
 
 router.route("/").get(flightSafetyReportsController.findAll);
 
-router.route("/:status").get(flightSafetyReportsController.findAllByStatus);
-
 router.route("/:id").get(flightSafetyReportsController.findOneById);
 
 module.exports = router;
