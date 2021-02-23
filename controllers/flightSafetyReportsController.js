@@ -1,73 +1,70 @@
-const mongoose = require("mongoose");
 const db = require("../models");
 
 module.exports = {
 	findAll: function (req, res) {
-		db.Aircraft.find({
-			flightSafetyReports: { $exists: true, $ne: [] },
-		})
-			.select(["type", "registration"])
+		db.FlightSafetyReport.find(req.query)
 			.populate({
-				path: "flightSafetyReports",
-				select: [
-					"date",
-					"time",
-					"occurrenceType",
-					"additionalOccurrenceTypes",
-					"descriptionTitle",
-					"status",
-				],
+				path: "aircraft",
+				select: ["type", "registration"],
 			})
-			.then((aircraft) => {
-				res.json(aircraft);
+			.select([
+				"date",
+				"time",
+				"occurrenceType",
+				"additionalOccurrenceTypes",
+				"descriptionTitle",
+				"status",
+			])
+			.then((flightSafetyReports) => {
+				res.json(flightSafetyReports);
 			})
-			.catch((err) => res.status(422).json(err));
-	},
-	findAllByStatus: function (req, res) {
-		db.Aircraft.find({
-			flightSafetyReports: { $exists: true, $ne: [] },
-		})
-			.select(["type", "registration"])
-			.populate({
-				path: "flightSafetyReports",
-				match: { status: req.params.status }, // have to change to req.query
-				select: [
-					"date",
-					"time",
-					"occurrenceType",
-					"additionalOccurrenceTypes",
-					"descriptionTitle",
-					"status",
-				],
-			})
-			.then((aircraft) => {
-				res.json(
-					aircraft.filter(
-						(aircraft) => aircraft.flightSafetyReports.length !== 0
-					)
-				);
-			})
-			.catch((err) => res.status(422).json(err));
+			.catch((err) => {
+				res.status(422).json(err);
+			});
 	},
 	findOneById: function (req, res) {
-		db.Aircraft.find({
-			flightSafetyReports: { $exists: true, $ne: [] },
-		})
-			.select(["type", "registration"])
-			.populate({
-				path: "flightSafetyReports",
-				match: { _id: req.params.id },
-				populate: {
-					path: "personnel",
+		db.FlightSafetyReport.findById(req.params.id)
+			.populate([
+				{
+					path: "wingOperatedBy",
+					select: "title",
 				},
-			})
-			.then((aircraft) => {
-				res.json(
-					aircraft.filter(
-						(aircraft) => aircraft.flightSafetyReports.length !== 0
-					)
-				);
-			})
-			.catch((err) => res.status(422).json(err));
+				{
+					path: "flyingSquadronOperatedBy",
+					select: "title",
+				},
+				{
+					path: "personnel",
+					select: ["role", "mosid", "onboard", "injury"],
+				},
+				{
+					path: "user",
+					select: [
+						"rank",
+						"firstName",
+						"lastName",
+						"mosid",
+						"office",
+						"telephoneNumber",
+						"emailAddress",
+					],
+				},
+				{
+					path: "aircraft",
+					select: ["type", "registration"],
+					populate: {
+						path: "flyingSquadron",
+						select: "title",
+						populate: {
+							path: "wing",
+							select: "title",
+						},
+					},
+				},
+			])
+			.then((flightSafetyReport) => res.json(flightSafetyReport))
+			.catch((err) => {
+				res.status(422).json(err);
+			});
 	},
 };
