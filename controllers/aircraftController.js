@@ -7,6 +7,8 @@ module.exports = {
 			.then((aircraft) => {
 				res.json(aircraft);
 			})
-			.catch((err) => res.status(422).json(err));
+			.catch((err) => {
+				res.status(422).json(err);
+			});
 	},
 };

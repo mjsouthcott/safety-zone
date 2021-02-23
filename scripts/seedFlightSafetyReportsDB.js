@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 const db = require("../models");
-if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config();
+
+// get environment variables
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
 }
-const mongoLogin = process.env.MONGO_USER || '';
-const mongoPass = process.env.MONGO_PASS || '';
-const mongoHost = process.env.MONGO_HOST || 'localhost';
-const mongoPort = process.env.MONGO_PORT || 27017;
+const dbHost = process.env.DB_HOST || "localhost";
+const dbPort = process.env.DB_PORT || 27017;
+const dbUsername = process.env.DB_USER || "";
+const dbPassword = process.env.DB_PASS || "";
 
 // connect to db
-const mongoseAuth = mongoLogin && mongoPass ? `${mongoLogin}:${mongoPass}@` : '';
-mongoose.connect(`mongodb://${mongoseAuth}${mongoHost}:${mongoPort}/test`, {
+const dbAuth = dbUsername && dbPassword ? `${dbUsername}:${dbPassword}@` : "";
+mongoose.connect(`mongodb://${dbAuth}${dbHost}:${dbPort}/test`, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });
@@ -140,63 +142,83 @@ const flightSafetyReportSeed = [
 	},
 ];
 
-db.Personnel.find()
-	.then((personnel) => {
-		for (let i = 0; i < personnel.length; i++) {
-			flightSafetyReportSeed[1].personnel.push(personnel[i]._id);
-		}
-		return flightSafetyReportSeed;
-	})
-	.then((flightSafetyReportSeed) => {
-		db.Wing.find()
-			.populate("flyingSquadrons")
-			.then((wings) => {
-				flightSafetyReportSeed[0].wingOperatedBy = wings[0]._id;
-				flightSafetyReportSeed[0].flyingSquadronOperatedBy =
-					wings[0].flyingSquadrons[0]._id;
-				flightSafetyReportSeed[1].wingOperatedBy = wings[0]._id;
-				flightSafetyReportSeed[1].flyingSquadronOperatedBy =
-					wings[0].flyingSquadrons[0]._id;
-				flightSafetyReportSeed[2].wingOperatedBy = wings[1]._id;
-				flightSafetyReportSeed[2].flyingSquadronOperatedBy =
-					wings[1].flyingSquadrons[1]._id;
-				return flightSafetyReportSeed;
-			})
-			.then((flightSafetyReportSeed) => {
-				db.FlightSafetyReport.insertMany(flightSafetyReportSeed).then(
-					(flightSafetyReports) => {
-						console.log(
-							`${flightSafetyReports.length} FlightSafetyReport records inserted!`
+db.Personnel.find().then((personnel) => {
+	for (let i = 0; i < personnel.length; i++) {
+		flightSafetyReportSeed[1].personnel.push(personnel[i]._id);
+	}
+	db.Wing.find()
+		.populate({
+			path: "flyingSquadrons",
+			populate: {
+				path: "aircraft",
+			},
+		})
+		.then((wings) => {
+			flightSafetyReportSeed[0].wingOperatedBy = wings[0]._id;
+			flightSafetyReportSeed[0].flyingSquadronOperatedBy =
+				wings[0].flyingSquadrons[0]._id;
+			flightSafetyReportSeed[1].wingOperatedBy = wings[0]._id;
+			flightSafetyReportSeed[1].flyingSquadronOperatedBy =
+				wings[0].flyingSquadrons[0]._id;
+			flightSafetyReportSeed[2].wingOperatedBy = wings[1]._id;
+			flightSafetyReportSeed[2].flyingSquadronOperatedBy =
+				wings[1].flyingSquadrons[1]._id;
+			flightSafetyReportSeed[0].aircraft =
+				wings[0].flyingSquadrons[0].aircraft[0]._id;
+			flightSafetyReportSeed[1].aircraft =
+				wings[0].flyingSquadrons[0].aircraft[0]._id;
+			flightSafetyReportSeed[2].aircraft =
+				wings[1].flyingSquadrons[1].aircraft[0]._id;
+			db.FlightSafetyReport.insertMany(flightSafetyReportSeed).then(
+				(flightSafetyReports) => {
+					console.log(
+						`${flightSafetyReports.length} FlightSafetyReport records inserted!`
+					);
+					db.Aircraft.find().then((aircraft) => {
+						aircraft[0].flightSafetyReports.push(
+							flightSafetyReports[0]._id,
+							flightSafetyReports[1]._id
 						);
-						db.Aircraft.updateOne(
-							{ registration: "GW-0000" },
-							{
-								$push: {
-									flightSafetyReports: [
-										flightSafetyReports[0]._id,
-										flightSafetyReports[1]._id,
-									],
-								},
-							}
-						).then(() => {
-							db.FlightSafetyReport.find().then(
-								(flightSafetyReports) => {
-									db.Aircraft.updateOne(
-										{ registration: "CX-0003" },
-										{
-											$push: {
-												flightSafetyReports: [
-													flightSafetyReports[2]._id,
-												],
+						aircraft[12].flightSafetyReports.push(
+							flightSafetyReports[2]._id
+						);
+						db.Aircraft.collection
+							.bulkWrite(
+								aircraft.map((aircraft) => ({
+									updateOne: {
+										filter: {
+											_id: aircraft._id,
+										},
+										update: {
+											$set: aircraft,
+										},
+									},
+								}))
+							)
+							.then(() => {
+								personnel.forEach((personnel) => {
+									personnel.flightSafetyReport =
+										flightSafetyReports[1]._id;
+								});
+								db.Personnel.collection
+									.bulkWrite(
+										personnel.map((personnel) => ({
+											updateOne: {
+												filter: {
+													_id: personnel._id,
+												},
+												update: {
+													$set: personnel,
+												},
 											},
-										}
-									).then(() => {
+										}))
+									)
+									.then(() => {
 										process.exit(0);
 									});
-								}
-							);
-						});
-					}
-				);
-			});
-	});
+							});
+					});
+				}
+			);
+		});
+});

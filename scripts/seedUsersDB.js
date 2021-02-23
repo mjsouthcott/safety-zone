@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 const db = require("../models");
-if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config();
+
+// get environment variables
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
 }
-const mongoLogin = process.env.MONGO_USER || '';
-const mongoPass = process.env.MONGO_PASS || '';
-const mongoHost = process.env.MONGO_HOST || 'localhost';
-const mongoPort = process.env.MONGO_PORT || 27017;
+const dbHost = process.env.DB_HOST || "localhost";
+const dbPort = process.env.DB_PORT || 27017;
+const dbUsername = process.env.DB_USER || "";
+const dbPassword = process.env.DB_PASS || "";
 
 // connect to db
-const mongoseAuth = mongoLogin && mongoPass ? `${mongoLogin}:${mongoPass}@` : '';
-mongoose.connect(`mongodb://${mongoseAuth}${mongoHost}:${mongoPort}/test`, {
+const dbAuth = dbUsername && dbPassword ? `${dbUsername}:${dbPassword}@` : "";
+mongoose.connect(`mongodb://${dbAuth}${dbHost}:${dbPort}/test`, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 });
@@ -109,30 +111,30 @@ const userSeed = [
 	},
 ];
 
-db.FlightSafetyReport.find()
-	.then((flightSafetyReports) => {
+db.FlightSafetyReport.find().then((flightSafetyReports) => {
+	for (let i = 0; i < flightSafetyReports.length; i++) {
+		userSeed[i].flightSafetyReports.push(flightSafetyReports[i]._id);
+	}
+	db.User.insertMany(userSeed).then((users) => {
+		console.log(`${users.length} User records inserted!`);
 		for (let i = 0; i < flightSafetyReports.length; i++) {
-			userSeed[i].flightSafetyReports.push(flightSafetyReports[i]._id);
+			flightSafetyReports[i].user = users[i]._id;
 		}
-		return userSeed;
-	})
-	.then((userSeed) => {
-		db.User.insertMany(userSeed).then(() => {
-			db.User.find()
-				.populate("flightSafetyReports")
-				.then((users) => {
-					// users.forEach((user) => {
-					// 	console.log(user.firstName, user.lastName);
-					// 	user.flightSafetyReports.forEach(
-					// 		(flightSafetyReport) => {
-					// 			console.log(
-					// 				flightSafetyReport.descriptionTitle
-					// 			);
-					// 		}
-					// 	);
-					// });
-					console.log(`${users.length} User records inserted!`);
-					process.exit(0);
-				});
-		});
+		db.FlightSafetyReport.collection
+			.bulkWrite(
+				flightSafetyReports.map((flightSafetyReport) => ({
+					updateOne: {
+						filter: {
+							_id: flightSafetyReport._id,
+						},
+						update: {
+							$set: flightSafetyReport,
+						},
+					},
+				}))
+			)
+			.then(() => {
+				process.exit(0);
+			});
 	});
+});
