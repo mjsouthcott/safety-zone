@@ -1,6 +1,6 @@
 version: "2"
 services:
-  saftey-zone-api:
+  safety-zone-api:
     command: yarn start
     environment:
       - NODE_ENV=production

@@ -1,6 +1,6 @@
 version: "2"
 services:
-  saftey-zone-api:
+  safety-zone-api:
     build: .
     environment:
       - MONGO_URI=mongodb://mongodb:27017/safety-zone
