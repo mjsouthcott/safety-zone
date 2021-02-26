@@ -5,7 +5,9 @@ const compress = require('compression');
 const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path');
 const passport = require('passport');
+const indexRouter = require('../routes/index');
 const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
 const strategies = require('./passport');
@@ -16,6 +18,10 @@ const error = require('../api/middlewares/error');
 * @public
 */
 const app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, '../views'));
+app.set('view engine', 'pug');
 
 // request logging. dev: console | production: file
 app.use(morgan(logs));
@@ -40,6 +46,10 @@ app.use(cors());
 // enable authentication
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
+
+// mount static endpoint
+app.use(express.static(path.join(__dirname, '../static/public')));
+app.use('/', indexRouter);
 
 // mount api v1 routes
 app.use('/api/v1', routes);
