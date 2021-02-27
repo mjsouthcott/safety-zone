@@ -47,7 +47,7 @@ const seedWingsDB = async function seed() {
           }
         }
         db.FlyingSquadron.collection
-          .bulkWrite(flyingSquadrons.map(flyingSquadron => ({
+          .bulkWrite(flyingSquadrons.map((flyingSquadron) => ({
             updateOne: {
               filter: {
                 _id: flyingSquadron._id,
