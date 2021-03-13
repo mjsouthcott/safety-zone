@@ -9,7 +9,7 @@ These steps will guide you through contributing to this project:
 - Clone it and install dependencies
 
 		git clone https://github.com/mjsouthcott/safety-zone
-		npm install
+		yarn
 
 - Make changes
 - Create tests

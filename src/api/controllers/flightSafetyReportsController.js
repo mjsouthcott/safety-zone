@@ -1,6 +1,10 @@
 const db = require('../models');
 
 module.exports = {
+  /**
+  * Get flight safety reports list
+  * @public
+  */
   findAll(req, res) {
     db.FlightSafetyReport.find(req.query)
       .populate({
@@ -22,6 +26,10 @@ module.exports = {
         res.status(422).json(err);
       });
   },
+  /**
+  * Get a flight safety reports
+  * @public
+  */
   findOneById(req, res) {
     db.FlightSafetyReport.findById(req.params.id)
       .populate([
@@ -61,7 +69,7 @@ module.exports = {
           },
         },
       ])
-      .then(flightSafetyReport => res.json(flightSafetyReport))
+      .then((flightSafetyReport) => res.json(flightSafetyReport))
       .catch((err) => {
         res.status(422).json(err);
       });

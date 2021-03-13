@@ -1,5 +1,9 @@
 const db = require('../models');
 
+/**
+ * Get squadrons list
+ * @public
+ */
 module.exports = {
   findAll(req, res) {
     db.FlyingSquadron.find(req.query)

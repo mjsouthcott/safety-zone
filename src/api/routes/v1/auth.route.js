@@ -19,8 +19,14 @@ const router = express.Router();
  * @apiGroup Auth
  * @apiPermission public
  *
- * @apiParam  {String}          email     User's email
- * @apiParam  {String{6..128}}  password  User's password
+ * @apiParam  {String}             email     User's email
+ * @apiParam  {String{..128}}      name      User's name
+ * @apiParam  {String}             rank      User's rank
+ * @apiParam  {String}             mosid     User's mosid
+ * @apiParam  {String{2..30}}      office    User's office
+ * @apiParam  {String{10..14}}     telephone User's telephone
+ * @apiParam  {String}             picture   User's picture
+ * @apiParam  {String{6..128}}     password  User's password
  *
  * @apiSuccess (Created 201) {String}  token.tokenType     Access Token's type
  * @apiSuccess (Created 201) {String}  token.accessToken   Authorization Token
@@ -32,6 +38,11 @@ const router = express.Router();
  *
  * @apiSuccess (Created 201) {String}  user.id         User's id
  * @apiSuccess (Created 201) {String}  user.name       User's name
+ * @apiSuccess (Created 201) {String}  user.rank       User's rank
+ * @apiSuccess (Created 201) {String}  user.mosid      User's mosid
+ * @apiSuccess (Created 201) {String}  user.office     User's office
+ * @apiSuccess (Created 201) {String}  user.telephone  User's telephone
+ * @apiSuccess (Created 201) {String}  user.picture    User's picture
  * @apiSuccess (Created 201) {String}  user.email      User's email
  * @apiSuccess (Created 201) {String}  user.role       User's role
  * @apiSuccess (Created 201) {Date}    user.createdAt  Timestamp
@@ -61,6 +72,11 @@ router.route('/register')
  *
  * @apiSuccess  {String}  user.id             User's id
  * @apiSuccess  {String}  user.name           User's name
+ * @apiSuccess  {String}  user.rank           yarnUser's rank
+ * @apiSuccess  {String}  user.mosid          User's mosid
+ * @apiSuccess  {String}  user.office         User's office
+ * @apiSuccess  {String}  user.telephone      User's telephone
+ * @apiSuccess  {String}  user.picture        User's picture
  * @apiSuccess  {String}  user.email          User's email
  * @apiSuccess  {String}  user.role           User's role
  * @apiSuccess  {Date}    user.createdAt      Timestamp

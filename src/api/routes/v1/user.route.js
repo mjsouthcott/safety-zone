@@ -31,6 +31,11 @@ router
    * @apiParam  {Number{1-}}         [page=1]     List page
    * @apiParam  {Number{1-100}}      [perPage=1]  Users per page
    * @apiParam  {String}             [name]       User's name
+   * @apiParam  {String}             [rank]       User's rank
+   * @apiParam  {String}             [mosid]      User's mosid
+   * @apiParam  {String}             [office]     User's office
+   * @apiParam  {String}             [telephone]  User's telephone
+   * @apiParam  {String}             [picture]    User's picture
    * @apiParam  {String}             [email]      User's email
    * @apiParam  {String=user,admin}  [role]       User's role
    *
@@ -50,13 +55,23 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
+   * @apiParam  {String}             email       User's email
+   * @apiParam  {String{6..128}}     password    User's password
+   * @apiParam  {String{..128}}      name        User's name
+   * @apiParam  {String}             rank        User's rank
+   * @apiParam  {String}             mosid       User's mosid
+   * @apiParam  {String{2..30}}      [office]    User's office
+   * @apiParam  {String{10..14}}     [telephone] User's telephone
+   * @apiParam  {String}             [picture]   User's picture
+   * @apiParam  {String=user,admin}  [role]      User's role
    *
    * @apiSuccess (Created 201) {String}  id         User's id
    * @apiSuccess (Created 201) {String}  name       User's name
+   * @apiSuccess (Created 201) {String}  rank       User's rank
+   * @apiSuccess (Created 201) {String}  mosid      User's mosid
+   * @apiSuccess (Created 201) {String}  office     User's office
+   * @apiSuccess (Created 201) {String}  telephone  User's telephone
+   * @apiSuccess (Created 201) {String}  picture    User's picture
    * @apiSuccess (Created 201) {String}  email      User's email
    * @apiSuccess (Created 201) {String}  role       User's role
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
@@ -81,6 +96,11 @@ router
    *
    * @apiSuccess {String}  id         User's id
    * @apiSuccess {String}  name       User's name
+   * @apiSuccess {String}  rank       User's rank
+   * @apiSuccess {String}  mosid      User's mosid
+   * @apiSuccess {String}  office     User's office
+   * @apiSuccess {String}  telephone  User's telephone
+   * @apiSuccess {String}  picture    User's picture
    * @apiSuccess {String}  email      User's email
    * @apiSuccess {String}  role       User's role
    * @apiSuccess {Date}    createdAt  Timestamp
@@ -103,6 +123,11 @@ router
    *
    * @apiSuccess {String}  id         User's id
    * @apiSuccess {String}  name       User's name
+   * @apiSuccess {String}  rank       User's rank
+   * @apiSuccess {String}  mosid      User's mosid
+   * @apiSuccess {String}  office     User's office
+   * @apiSuccess {String}  telephone  User's telephone
+   * @apiSuccess {String}  picture    User's picture
    * @apiSuccess {String}  email      User's email
    * @apiSuccess {String}  role       User's role
    * @apiSuccess {Date}    createdAt  Timestamp
@@ -122,14 +147,24 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
+   * @apiParam  {String}             email       User's email
+   * @apiParam  {String{6..128}}     password    User's password
+   * @apiParam  {String{..128}}      [name]      User's name
+   * @apiParam  {String}             [rank]      User's rank
+   * @apiParam  {String}             [mosid]     User's mosid
+   * @apiParam  {String{2..30}}      [office]    User's office
+   * @apiParam  {String{10..14}}     [telephone] User's telephone
+   * @apiParam  {String}             [picture]   User's picture
+   * @apiParam  {String=user,admin}  [role]      User's role
    * (You must be an admin to change the user's role)
    *
    * @apiSuccess {String}  id         User's id
    * @apiSuccess {String}  name       User's name
+   * @apiSuccess {String}  rank       User's rank
+   * @apiSuccess {String}  mosid      User's mosid
+   * @apiSuccess {String}  office     User's office
+   * @apiSuccess {String}  telephone  User's telephone
+   * @apiSuccess {String}  picture    User's picture
    * @apiSuccess {String}  email      User's email
    * @apiSuccess {String}  role       User's role
    * @apiSuccess {Date}    createdAt  Timestamp
@@ -150,14 +185,24 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [role]    User's role
+   * @apiParam  {String}             email       User's email
+   * @apiParam  {String{6..128}}     password    User's password
+   * @apiParam  {String{..128}}      [name]      User's name
+   * @apiParam  {String}             [rank]      User's rank
+   * @apiParam  {String}             [mosid]     User's mosid
+   * @apiParam  {String{2..30}}      [office]    User's office
+   * @apiParam  {String{10..14}}     [telephone] User's telephone
+   * @apiParam  {String}             [picture]   User's picture
+   * @apiParam  {String=user,admin}  [role]      User's role
    * (You must be an admin to change the user's role)
    *
    * @apiSuccess {String}  id         User's id
    * @apiSuccess {String}  name       User's name
+   * @apiSuccess {String}  rank       User's rank
+   * @apiSuccess {String}  mosid      User's mosid
+   * @apiSuccess {String}  office     User's office
+   * @apiSuccess {String}  telephone  User's telephone
+   * @apiSuccess {String}  picture    User's picture
    * @apiSuccess {String}  email      User's email
    * @apiSuccess {String}  role       User's role
    * @apiSuccess {Date}    createdAt  Timestamp

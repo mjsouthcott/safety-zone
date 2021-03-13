@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
+const moment = require('moment-timezone');
+const { omit } = require('lodash');
 const User = require('../models/user.model');
 const RefreshToken = require('../models/refreshToken.model');
 const PasswordResetToken = require('../models/passwordResetToken.model');
-const moment = require('moment-timezone');
 const { jwtExpirationInterval } = require('../../config/vars');
-const { omit } = require('lodash');
 const APIError = require('../utils/APIError');
 const emailProvider = require('../services/emails/emailProvider');
 

@@ -52,14 +52,14 @@ const userSchema = new mongoose.Schema({
   },
   office: {
     type: String,
-    // required: true,
+    required: false,
     minlength: 2,
     maxlength: 30,
     trim: true,
   },
   telephone: {
     type: String,
-    // required: true,
+    required: false,
     minlength: 10,
     maxlength: 14,
     trim: true,
@@ -71,6 +71,7 @@ const userSchema = new mongoose.Schema({
   },
   picture: {
     type: String,
+    required: false,
     trim: true,
   },
   flightSafetyReports: [
@@ -110,7 +111,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'picture', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'rank', 'mosid', 'office', 'telephone', 'picture', 'email', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -149,14 +150,12 @@ userSchema.statics = {
   async get(id) {
     try {
       let user;
-
       if (mongoose.Types.ObjectId.isValid(id)) {
         user = await this.findById(id).exec();
       }
       if (user) {
         return user;
       }
-
       throw new APIError({
         message: 'User does not exist',
         status: httpStatus.NOT_FOUND,
@@ -206,9 +205,11 @@ userSchema.statics = {
    * @returns {Promise<User[]>}
    */
   list({
-    page = 1, perPage = 30, name, email, role,
+    page = 1, perPage = 30, name, rank, mosid, office, telephone, picture, email, role,
   }) {
-    const options = omitBy({ name, email, role }, isNil);
+    const options = omitBy({
+      name, rank, mosid, office, telephone, picture, email, role,
+    }, isNil);
 
     return this.find(options)
       .sort({ createdAt: -1 })
@@ -242,12 +243,16 @@ userSchema.statics = {
   },
 
   async oAuthLogin({
-    service, id, email, name, picture,
+    service, id, email, name, rank, mosid, office, telephone, picture,
   }) {
     const user = await this.findOne({ $or: [{ [`services.${service}`]: id }, { email }] });
     if (user) {
       user.services[service] = id;
       if (!user.name) user.name = name;
+      if (!user.rank) user.rank = rank;
+      if (!user.rank) user.mosid = mosid;
+      if (!user.rank) user.office = office;
+      if (!user.rank) user.telephone = telephone;
       if (!user.picture) user.picture = picture;
       return user.save();
     }
