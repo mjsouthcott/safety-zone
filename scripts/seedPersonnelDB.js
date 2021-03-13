@@ -1,81 +1,70 @@
-const mongoose = require("mongoose");
-const db = require("../models");
-
-// get environment variables
-if (process.env.NODE_ENV !== "production") {
-	require("dotenv").config();
-}
-const dbHost = process.env.DB_HOST || "localhost";
-const dbPort = process.env.DB_PORT || 27017;
-const dbUsername = process.env.DB_USER || "";
-const dbPassword = process.env.DB_PASS || "";
-
-// connect to db
-const dbAuth = dbUsername && dbPassword ? `${dbUsername}:${dbPassword}@` : "";
-mongoose.connect(`mongodb://${dbAuth}${dbHost}:${dbPort}/test`, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+const db = require('../src/api/models');
 
 const personnelSeed = [
-	/*
+  /*
 	 *	Wing: 1 (14 Wing Greenwood)
 	 *	Flying Squadron: 1 (404 Long Range Patrol and Training Squadron)
 	 * 	Aircraft: 1 (CP-140 Aurora/GW-0000)
 	 * 	Flight Safety Report: 2 (Failed tire during landing)
 	 *	Personnel: 1 (Captain)
 	 */
-	{
-		role: "Captain",
-		mosid: "00183: PLT",
-		onboard: true, // boolean
-		injury: "Whiplash",
-	},
+  {
+    role: 'Captain',
+    mosid: '00183: PLT',
+    onboard: true, // boolean
+    injury: 'Whiplash',
+  },
 
-	/*
+  /*
 	 *	Wing: 1 (14 Wing Greenwood)
 	 *	Flying Squadron: 1 (404 Long Range Patrol and Training Squadron)
 	 * 	Aircraft: 1 (CP-140 Aurora/GW-0000)
 	 * 	Flight Safety Report: 2 (Failed tire during landing)
 	 *	Personnel: 2 (First Officer)
 	 */
-	{
-		role: "First Officer",
-		mosid: "00183: PLT",
-		onboard: true, // boolean
-		injury: "Whiplash",
-	},
+  {
+    role: 'First Officer',
+    mosid: '00183: PLT',
+    onboard: true, // boolean
+    injury: 'Whiplash',
+  },
 
-	/*
+  /*
 	 *	Wing: 1 (14 Wing Greenwood)
 	 *	Flying Squadron: 1 (404 Long Range Patrol and Training Squadron)
 	 * 	Aircraft: 1 (CP-140 Aurora/GW-0000)
 	 * 	Flight Safety Report: 2 (Failed tire during landing)
 	 *	Personnel: 3 (Air Combat Systems Officer)
 	 */
-	{
-		role: "Air Combat Systems Officer",
-		mosid: "00182: ACSO",
-		onboard: true, // boolean
-		injury: "Bruised shoulder",
-	},
+  {
+    role: 'Air Combat Systems Officer',
+    mosid: '00182: ACSO',
+    onboard: true, // boolean
+    injury: 'Bruised shoulder',
+  },
 
-	/*
+  /*
 	 *	Wing: 1 (14 Wing Greenwood)
 	 *	Flying Squadron: 1 (404 Long Range Patrol and Training Squadron)
 	 * 	Aircraft: 1 (CP-140 Aurora/GW-0000)
 	 * 	Flight Safety Report: 2 (Failed tire during landing)
 	 *	Personnel: 4 (Passenger)
 	 */
-	{
-		role: "Passenger",
-		mosid: "00187: EME",
-		onboard: true, // boolean
-		injury: "Concussion",
-	},
+  {
+    role: 'Passenger',
+    mosid: '00187: EME',
+    onboard: true, // boolean
+    injury: 'Concussion',
+  },
 ];
 
-db.Personnel.insertMany(personnelSeed).then((personnel) => {
-	console.log(`${personnel.length} Personnel records inserted!`);
-	process.exit(0);
-});
+const seedPersonnelDB = async function seed() {
+  return new Promise((resolve) => {
+    db.Personnel.insertMany(personnelSeed).then((personnel) => {
+      console.log(`${personnel.length} Personnel records inserted!`);
+      resolve();
+    });
+  });
+};
+
+module.exports = seedPersonnelDB;
