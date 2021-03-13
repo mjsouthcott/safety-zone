@@ -202,4 +202,4 @@ SOFTWARE.
 
 ## Contributing
 
-TBC
+Please read out guide [Contributing](https://github.com/mjsouthcott/safety-zone/blob/main/CONTRIBUTING.md).
