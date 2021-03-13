@@ -1,5 +1,9 @@
 const db = require('../models');
 
+/**
+ * Get wings list
+ * @public
+ */
 module.exports = {
   findAll(req, res) {
     db.Wing.find(req.query)

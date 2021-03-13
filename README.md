@@ -180,7 +180,7 @@ TBC
 
 MIT License
 
-Copyright (c) 2020 Matthew James Southcott
+Copyright (c) 2020-2021 Matthew James Southcott and [Contributors](https://github.com/mjsouthcott/safety-zone/graphs/contributors).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
